@@ -1,3 +1,4 @@
+
 create schema recibos_app;
 
 use recibos_app;
