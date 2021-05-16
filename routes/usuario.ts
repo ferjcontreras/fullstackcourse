@@ -17,10 +17,17 @@ UsuarioRoutes.post("/login", async (req: Request, res: Response) => {
         password: req.body.password
     }
     try {
-        const userPassword: any = await queryGenerica("SELECT password FROM usuario WHERE nick = ?", [Usuario.nick]);
-        bcrypt.compare(Usuario.password, userPassword[0].password, function (err, res2) {
+        const userLoguin: any = await queryGenerica("SELECT id, password, email FROM usuario WHERE nick = ?", [Usuario.nick]);
+        bcrypt.compare(Usuario.password, userLoguin[0].password, function (err, res2) {
             if (res2) {
-                res.json({ estado: "success" })
+
+                const tokenJwt = Token.getToken({
+                    _id: userLoguin[0].id,
+                    nick: Usuario.nick,
+                    email: userLoguin[0].email
+                })
+
+                res.json({ estado: "success", token: tokenJwt })
             } else {
                 res.json({ estado: "error", message: "La contraseña no coincide" })
             }
@@ -48,14 +55,15 @@ UsuarioRoutes.post("/create", async (req: Request, res: Response) => {
     }
 })
 
-UsuarioRoutes.put("/update", async (req: any, res: Response) => {
+UsuarioRoutes.put("/update", verificarToken, async (req: any, res: Response) => {
     const Usuario = {
-        id: req.body.id,
-        email: req.body.email
+        /*id: req.body.id,*/
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 10)
     }
     try {
         await queryGenerica('start transaction');
-        const update: any = await queryGenerica("UPDATE usuario SET email = ? WHERE id = ?", [Usuario.email, Usuario.id]);
+        const update: any = await queryGenerica("UPDATE usuario SET email = ?, password= ? WHERE id = ?", [Usuario.email, Usuario.password, req.usuario._id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
             res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` })

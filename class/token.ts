@@ -9,6 +9,7 @@ class Token {
     }
 
     static getToken(payload: {}) {
+        //console.log(payload);
         return jwt.sign(
             {
                 usuario: payload

@@ -18,6 +18,8 @@ MiServer.app.use(bodyParser.json());
 //upload
 MiServer.app.use(fileUpload());
 
+
+
 //start bddMySql
 connectionMySql.connect((error) => {
 	if (error) {

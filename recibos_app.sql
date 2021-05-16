@@ -1,6 +1,6 @@
 
 
-
+drop schema recibos_app;
 
 create schema recibos_app;
 
@@ -37,13 +37,13 @@ create table persona(
 
 
 create table usuario(
-	id integer auto_increment primary key,
+    id integer auto_increment primary key,
     idPersona integer,
     idRol integer,
-    nick unique varchar(20),
-    email varchar(20),
+    nick varchar(100),
+    email varchar(100),
     password text,
-    avatar varchar(50),
+    avatar varchar(100) DEFAULT "default-avatar.jpg",
     CONSTRAINT FK1_USUARIO FOREIGN KEY(idPersona) REFERENCES persona(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     CONSTRAINT FK2_USUARIO FOREIGN KEY(idRol) REFERENCES rol(id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
