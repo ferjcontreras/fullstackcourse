@@ -52,4 +52,20 @@ export default class FileSystem {
         }
     }
 
+    fileFromTempToRecibos(userID: string) {
+        const pathUserTemp = path.resolve(__dirname, "../uploads", userID, "temp");
+        const pathUserRecibos = path.resolve(__dirname, "../uploads", userID, "recibos");
+
+        if (!fs.existsSync(pathUserTemp)) {
+            return [];
+        }
+
+        if (!fs.existsSync(pathUserRecibos)) {
+            fs.mkdirSync(pathUserRecibos)
+        }
+
+        
+
+    }
+
 }
