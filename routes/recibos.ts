@@ -21,8 +21,9 @@ RecibosRoutes.post("/create", verificarToken, async (req: any, res: Response)=>{
 
     if (req.usuario.rol == 2) { // solo permite agregar el recibo si tiene el rol de contador
         try {
+            const archivoRecibo = await fileSystem.fileFromTempToRecibos(newRecibo.idUsuarioEmpleado);
             await queryGenerica('start transaction');
-            await queryGenerica("INSERT INTO recibo (idUsuarioContador, idUsuarioEmpleado, idTipoRecibo, fecha, sueldo_neto, sueldo_bruto) VALUES (?,?,?,?,?,?)", [newRecibo.idUsuarioEmpleado, newRecibo.idUsuarioEmpleado, newRecibo.idTipoRecibo,newRecibo.fecha, newRecibo.sueldo_neto, newRecibo.sueldo_bruto]);
+            await queryGenerica("INSERT INTO recibo (idUsuarioContador, idUsuarioEmpleado, idTipoRecibo, fecha, sueldo_neto, sueldo_bruto, archivo) VALUES (?,?,?,?,?,?,?)", [newRecibo.idUsuarioEmpleado, newRecibo.idUsuarioEmpleado, newRecibo.idTipoRecibo,newRecibo.fecha, newRecibo.sueldo_neto, newRecibo.sueldo_bruto, archivoRecibo]);
             await queryGenerica('commit');
             res.json({ estado: "success" })
         } catch (error) {
@@ -60,7 +61,7 @@ RecibosRoutes.post("/uploadRecibo", verificarToken, async (req: any, res: Respon
                 mensaje: "Formato de imagen incorrecto"
             })
         }
-        await fileSystem.saveImageTemp(Recibo.idUsuario, archivo)
+        await fileSystem.saveReciboTemp(Recibo.idUsuario, archivo)
         res.json({
             estado: "success",
             data: archivo
