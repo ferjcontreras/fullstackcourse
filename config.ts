@@ -1,19 +1,35 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
+//server
 dotenv.config({
     path: path.resolve(__dirname, '../env', process.env.NODE_ENV + '.env')
 });
-
-let variables_entorno = {
+let env_server = {
     NODE_ENV: process.env.NODE_ENV || 'development',
-    HOST: process.env.HOST || 'localhost',
-    PORT: process.env.PORT || 3000,
-    HOST_DB: process.env.HOST_DB || 'localhost',
-    PORT_DB: process.env.PORT_DB || 3306,
-    USER_DB: process.env.USER_DB || 'root',
-    PASSWORD_DB: process.env.PASSWORD_DB || '',
-    DB_MYSQL: process.env.DB_MYSQL || 'recibos_app'
+    SERVER_HOST: process.env.HOST || 'localhost',
+    SERVER_PORT: process.env.PORT || 3000
 }
 
-export default variables_entorno;
+//bdd
+dotenv.config({
+    path: path.resolve(__dirname, '../env/bdd.env')
+});
+let env_bdd = {
+    DB_HOST: process.env.DB_HOST,
+    DB_PORT: process.env.DB_PORT,
+    DB_USER: process.env.DB_USER,
+    DB_PASSWORD: process.env.DB_PASSWORD,
+    DB_NAME: process.env.DB_NAME
+}
+
+//email
+dotenv.config({
+    path: path.resolve(__dirname, '../env/email.env')
+});
+let env_email = {
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASS: process.env.EMAIL_PASS,
+}
+
+export { env_server, env_bdd, env_email };

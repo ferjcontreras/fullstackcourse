@@ -33,8 +33,8 @@ function login(req, res) {
                         _id: userLoguin[0].id,
                         nick: Usuario.nick,
                         email: userLoguin[0].email,
-                        rol: userLoguin[0].idRol,
-                        idpersona: userLoguin[0].idPersona
+                        idRol: userLoguin[0].idRol,
+                        idPersona: userLoguin[0].idPersona
                     });
                     res.json({ estado: "success", token: tokenJwt });
                 }

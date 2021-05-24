@@ -15,7 +15,7 @@ export async function create(req: any, res: Response) {
         sueldo_bruto: req.body.sueldo_bruto
     }
 
-    if (req.usuario.rol == 2) { // solo permite agregar el recibo si tiene el rol de contador
+    if (req.usuario.idRol == 2) { // solo permite agregar el recibo si tiene el rol de contador
         try {
             const archivoRecibo = await fileSystem.fileFromTempToRecibos(newRecibo.idUsuarioEmpleado);
             await queryGenerica('start transaction');
@@ -42,7 +42,7 @@ export async function uploadRecibo(req: any, res: Response) {
         /*idRecibo: req.body.id_recibo*/
     }
 
-    if (req.usuario.rol == 2) { // Si se trata de un contador, entonces si puedo subir el recibo, de lo contrario no
+    if (req.usuario.idRol == 2) { // Si se trata de un contador, entonces si puedo subir el recibo, de lo contrario no
         if (!req.files) {
             return res.status(400).json({
                 estado: "error",

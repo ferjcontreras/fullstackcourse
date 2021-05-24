@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const path_1 = __importDefault(require("path"));
+const config_1 = require("../config");
 class email {
     constructor() {
         this.host = "smtp-mail.outlook.com"; // o "outlook.office365.com"
@@ -12,8 +13,8 @@ class email {
         this.secure = false;
         this.tsl = false;
         this.auth = {
-            user: "testing.utn.ba@outlook.com",
-            pass: "testing1234**"
+            user: config_1.env_email.EMAIL_USER,
+            pass: config_1.env_email.EMAIL_PASS
         };
     }
     //enviar un mail con un adjunto x defecto

@@ -1,10 +1,10 @@
 import express from 'express';
-import variables_entorno from '../config';
+import { env_server } from '../config';
 
 class Server {
     public app: express.Application;
-    public host: string = variables_entorno.HOST;
-    public port: any = variables_entorno.PORT;
+    public host: string = env_server.SERVER_HOST;
+    public port: any = env_server.SERVER_PORT;
 
     constructor() {
         this.app = express();

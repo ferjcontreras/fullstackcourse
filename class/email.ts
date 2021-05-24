@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
+import { env_email } from '../config';
 
 export default class email {
 
@@ -8,8 +9,8 @@ export default class email {
     secure: boolean = false
     tsl: boolean = false
     auth = {
-        user: "testing.utn.ba@outlook.com",
-        pass: "testing1234**"
+        user: env_email.EMAIL_USER,
+        pass: env_email.EMAIL_PASS
     }
 
     constructor() {

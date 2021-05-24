@@ -26,7 +26,7 @@ function create(req, res) {
             sueldo_neto: req.body.sueldo_neto,
             sueldo_bruto: req.body.sueldo_bruto
         };
-        if (req.usuario.rol == 2) { // solo permite agregar el recibo si tiene el rol de contador
+        if (req.usuario.idRol == 2) { // solo permite agregar el recibo si tiene el rol de contador
             try {
                 const archivoRecibo = yield fileSystem.fileFromTempToRecibos(newRecibo.idUsuarioEmpleado);
                 yield promesas_1.default('start transaction');
@@ -54,7 +54,7 @@ function uploadRecibo(req, res) {
         const Recibo = {
             idUsuario: req.body.id_usuario,
         };
-        if (req.usuario.rol == 2) { // Si se trata de un contador, entonces si puedo subir el recibo, de lo contrario no
+        if (req.usuario.idRol == 2) { // Si se trata de un contador, entonces si puedo subir el recibo, de lo contrario no
             if (!req.files) {
                 return res.status(400).json({
                     estado: "error",
