@@ -4,12 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql_1 = __importDefault(require("mysql"));
+const config_1 = __importDefault(require("../config"));
 //Conexion MySql
 const connectionMySql = mysql_1.default.createConnection({
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: "",
-    database: "recibos_app"
+    host: config_1.default.HOST_DB,
+    port: Number(config_1.default.PORT_DB),
+    user: config_1.default.USER_DB,
+    password: config_1.default.PASSWORD_DB,
+    database: config_1.default.DB_MYSQL
 });
 exports.default = connectionMySql;

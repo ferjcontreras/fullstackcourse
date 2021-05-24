@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const config_1 = __importDefault(require("../config"));
 class Server {
-    constructor(host, port) {
-        this.host = host;
-        this.port = port;
+    constructor() {
+        this.host = config_1.default.HOST;
+        this.port = config_1.default.PORT;
         this.app = express_1.default();
     }
     start(callback) {

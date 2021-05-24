@@ -8,6 +8,7 @@ class Token {
     constructor() {
     }
     static getToken(payload) {
+        //console.log(payload);
         return jsonwebtoken_1.default.sign({
             usuario: payload
         }, this.seed, { expiresIn: this.caducidad });

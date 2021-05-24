@@ -47,5 +47,48 @@ class FileSystem {
             fs_1.default.mkdirSync(pathUserAvatar);
         }
     }
+    fileFromTempToRecibos(userID) {
+        const pathReciboTemp = path_1.default.resolve(__dirname, "../uploads", userID, "recibos/temp");
+        const pathReciboPost = path_1.default.resolve(__dirname, "../uploads", userID, "recibos/post");
+        if (!fs_1.default.existsSync(pathReciboTemp)) {
+            return [];
+        }
+        if (!fs_1.default.existsSync(pathReciboPost)) {
+            fs_1.default.mkdirSync(pathReciboPost);
+        }
+        const Nombrerecibo = this.obtenerReciboTemp(userID);
+        //console.log("Nombre del recibo ",Nombrerecibo)
+        // Se trata de un solo recibo por lo tanto no genero arreglo, traigo uno solo
+        fs_1.default.renameSync(`${pathReciboTemp}/${Nombrerecibo}`, `${pathReciboPost}/${Nombrerecibo}`);
+        return Nombrerecibo;
+    }
+    obtenerReciboTemp(userID) {
+        const pathTemp = path_1.default.resolve(__dirname, '../uploads', userID, "recibos/temp");
+        //console.log("estoy leyendo de: ", pathTemp)
+        return fs_1.default.readdirSync(pathTemp)[0];
+    }
+    createFolderRecibo(userID) {
+        const pathUser = path_1.default.resolve(__dirname, "../uploads", userID, "recibos");
+        const pathUserTemp = pathUser + "/temp";
+        if (!fs_1.default.existsSync(pathUser)) {
+            fs_1.default.mkdirSync(pathUser);
+            fs_1.default.mkdirSync(pathUserTemp);
+        }
+        return pathUserTemp;
+    }
+    saveReciboTemp(userID, file) {
+        return new Promise((resolve, reject) => {
+            const pathUserTemp = this.createFolderRecibo(userID);
+            const fileName = this.generateUniqueName(file.name);
+            file.mv(`${pathUserTemp}/${fileName}`, (error) => {
+                if (error) {
+                    return reject();
+                }
+                else {
+                    return resolve(true);
+                }
+            });
+        });
+    }
 }
 exports.default = FileSystem;

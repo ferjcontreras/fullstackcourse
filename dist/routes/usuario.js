@@ -14,8 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const token_1 = __importDefault(require("../class/token"));
+const authentication_1 = require("../middlewares/authentication");
 const promesas_1 = __importDefault(require("../utils/promesas"));
 const file_system_1 = __importDefault(require("../class/file-system"));
+const email_1 = __importDefault(require("../class/email"));
 const fileSystem = new file_system_1.default();
 const UsuarioRoutes = express_1.Router(); //no new! Router no es clase
 UsuarioRoutes.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -24,10 +27,16 @@ UsuarioRoutes.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, fun
         password: req.body.password
     };
     try {
-        const userPassword = yield promesas_1.default("SELECT password FROM usuario WHERE nick = ?", [Usuario.nick]);
-        bcrypt_1.default.compare(Usuario.password, userPassword[0].password, function (err, res2) {
+        const userLoguin = yield promesas_1.default("SELECT id, password, email, idRol FROM usuario WHERE nick = ?", [Usuario.nick]);
+        bcrypt_1.default.compare(Usuario.password, userLoguin[0].password, function (err, res2) {
             if (res2) {
-                res.json({ estado: "success" });
+                const tokenJwt = token_1.default.getToken({
+                    _id: userLoguin[0].id,
+                    nick: Usuario.nick,
+                    email: userLoguin[0].email,
+                    rol: userLoguin[0].idRol
+                });
+                res.json({ estado: "success", token: tokenJwt });
             }
             else {
                 res.json({ estado: "error", message: "La contraseña no coincide" });
@@ -49,6 +58,8 @@ UsuarioRoutes.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, fu
         yield promesas_1.default('start transaction');
         yield promesas_1.default("INSERT INTO usuario (nick, password, email) VALUES (?,?,?)", [newUsuario.nick, newUsuario.password, newUsuario.email]);
         yield promesas_1.default('commit');
+        const email = new email_1.default();
+        yield email.enviarEmail(req.body.email, 'Creación de Usuario', 'Su usuario ha sido creado correctamente');
         res.json({ estado: "success" });
     }
     catch (error) {
@@ -56,14 +67,15 @@ UsuarioRoutes.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.json({ estado: "error", data: error, rollback: rollback });
     }
 }));
-UsuarioRoutes.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+UsuarioRoutes.put("/update", authentication_1.verificarToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const Usuario = {
-        id: req.body.id,
-        email: req.body.email
+        /*id: req.body.id,*/
+        email: req.body.email,
+        password: bcrypt_1.default.hashSync(req.body.password, 10)
     };
     try {
         yield promesas_1.default('start transaction');
-        const update = yield promesas_1.default("UPDATE usuario SET email = ? WHERE id = ?", [Usuario.email, Usuario.id]);
+        const update = yield promesas_1.default("UPDATE usuario SET email = ?, password= ? WHERE id = ?", [Usuario.email, Usuario.password, req.usuario._id]);
         yield promesas_1.default('commit');
         if (update.affectedRows > 0) {
             res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` });

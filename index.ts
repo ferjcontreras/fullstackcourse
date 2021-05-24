@@ -1,11 +1,12 @@
 import Server from "./class/server";
 import usuarioRoutes from "./routes/usuario";
 import RecibosRoutes from "./routes/recibos";
+import HomeRoutes from "./routes/home";
 import connectionMySql from "./bin/connection_MySql";
 import bodyParser from "body-parser";
 import fileUpload from 'express-fileupload';
 
-const MiServer = new Server('localhost', 3000);
+const MiServer = new Server();
 
 //start server
 MiServer.start(() => {
@@ -33,3 +34,4 @@ connectionMySql.connect((error) => {
 //rutas aplicacion
 MiServer.app.use("/usuario", usuarioRoutes);                      //localhost:3000/users/prueba
 MiServer.app.use("/recibo", RecibosRoutes);
+MiServer.app.use("/", HomeRoutes);

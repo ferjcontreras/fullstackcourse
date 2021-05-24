@@ -5,10 +5,13 @@ import { verificarToken } from "../middlewares/authentication";
 import queryGenerica from '../utils/promesas';
 import { IfileUpload } from '../interfaces/file-upload';
 import FileSystem from '../class/file-system';
+import emailClass from '../class/email'
+import email from '../class/email';
 
 const fileSystem = new FileSystem();
 
 const UsuarioRoutes = Router();    //no new! Router no es clase
+
 
 
 UsuarioRoutes.post("/login", async (req: Request, res: Response) => {
@@ -49,6 +52,8 @@ UsuarioRoutes.post("/create", async (req: Request, res: Response) => {
         await queryGenerica('start transaction');
         await queryGenerica("INSERT INTO usuario (nick, password, email) VALUES (?,?,?)", [newUsuario.nick, newUsuario.password, newUsuario.email]);
         await queryGenerica('commit');
+        const email = new emailClass();
+        await email.enviarEmail(req.body.email, 'Creación de Usuario', 'Su usuario ha sido creado correctamente')
         res.json({ estado: "success" })
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
