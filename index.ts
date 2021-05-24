@@ -1,11 +1,12 @@
 import Server from "./class/server";
-import usuarioRoutes from "./routes/usuario";
-import RecibosRoutes from "./routes/recibos";
-import HomeRoutes from "./routes/home";
-import PersonasRoutes from "./routes/personas"
 import connectionMySql from "./bin/connection_MySql";
 import bodyParser from "body-parser";
 import fileUpload from 'express-fileupload';
+//rutas
+import HomeRoutes from "./routes/home";
+import usuarioRoutes from "./routes/usuario";
+import RecibosRoutes from "./routes/recibos";
+import PersonasRoutes from "./routes/personas"
 
 const MiServer = new Server();
 
@@ -33,7 +34,7 @@ connectionMySql.connect((error) => {
 });
 
 //rutas aplicacion
-MiServer.app.use("/usuario", usuarioRoutes);                      //localhost:3000/users/prueba
-MiServer.app.use("/recibo", RecibosRoutes);
-MiServer.app.use("/", HomeRoutes);
-MiServer.app.use("/persona", PersonasRoutes);
+MiServer.app.use("/", HomeRoutes);				//localhost:PORT/
+MiServer.app.use("/usuario", usuarioRoutes);	//localhost:PORT/usuario
+MiServer.app.use("/recibo", RecibosRoutes);		//localhost:PORT/recibo
+MiServer.app.use("/persona", PersonasRoutes);	//localhost:PORT/persona

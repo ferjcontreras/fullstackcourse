@@ -20,7 +20,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const homeController = __importStar(require("../controllers/home"));
-const HomeRoutes = express_1.Router(); //no new! Router no es clase
-HomeRoutes.get("/", homeController.index);
-exports.default = HomeRoutes;
+const authentication_1 = require("../middlewares/authentication");
+const personaController = __importStar(require("../controllers/personas"));
+const PersonasRoutes = express_1.Router();
+PersonasRoutes.post("/create", authentication_1.verificarToken, personaController.create);
+PersonasRoutes.post("/update", authentication_1.verificarToken, personaController.update);
+exports.default = PersonasRoutes;
