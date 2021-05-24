@@ -20,7 +20,7 @@ UsuarioRoutes.post("/login", async (req: Request, res: Response) => {
         password: req.body.password
     }
     try {
-        const userLoguin: any = await queryGenerica("SELECT id, password, email, idRol FROM usuario WHERE nick = ?", [Usuario.nick]);
+        const userLoguin: any = await queryGenerica("SELECT id, password, email, idRol, idPersona FROM usuario WHERE nick = ?", [Usuario.nick]);
         bcrypt.compare(Usuario.password, userLoguin[0].password, function (err, res2) {
             if (res2) {
 
@@ -28,7 +28,8 @@ UsuarioRoutes.post("/login", async (req: Request, res: Response) => {
                     _id: userLoguin[0].id,
                     nick: Usuario.nick,
                     email: userLoguin[0].email,
-                    rol: userLoguin[0].idRol
+                    rol: userLoguin[0].idRol,
+                    idpersona: userLoguin[0].idPersona
                 })
 
                 res.json({ estado: "success", token: tokenJwt })
