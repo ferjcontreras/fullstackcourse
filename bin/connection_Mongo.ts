@@ -1,4 +1,4 @@
-import moongose from 'mongoose';
+/*import moongose from 'mongoose';
 
 //Conexion Mongo
 class DatabaseMongo {
@@ -16,4 +16,4 @@ class DatabaseMongo {
             });
     }
 }
-export default DatabaseMongo;
+export default DatabaseMongo;*/

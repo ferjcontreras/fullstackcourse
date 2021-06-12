@@ -24,9 +24,22 @@ export async function login(req: any, res: Response) {
                     idRol: userLoguin[0].idRol,
                     idPersona: userLoguin[0].idPersona
                 })
-                res.json({ estado: "success", token: tokenJwt })
+                res.json({ 
+                    estado: "success", 
+                    data: {
+                        id: userLoguin[0].id,
+                        nick: Usuario.nick,
+                        email: userLoguin[0].email,
+                        idRol: userLoguin[0].idRol,
+                        idPersona: userLoguin[0].idPersona
+                    },    
+                    token: tokenJwt })
             } else {
-                res.json({ estado: "error", message: "La contraseña no coincide" })
+                res.json({ 
+                    estado: "error", 
+                    data: "La contraseña no coincide",
+                    token: "" 
+                })
             }
         });
     } catch (error) {
@@ -71,7 +84,11 @@ export async function update(req: any, res: Response) {
         }
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-        res.json({ estado: "error", data: error, rollback: rollback })
+        res.json({ 
+            estado: "error", 
+            data: error, 
+            token: "" 
+        })
     }
 }
 
@@ -85,13 +102,21 @@ export async function setRol(req: any, res: Response) {
         const update: any = await queryGenerica("UPDATE usuario SET idRol = ? WHERE id = ?", [Usuario.idRol, Usuario.id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
-            res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` })
+            res.json({ 
+                estado: "success", 
+                data: `Se han actualizado ${update.affectedRows} registros`,
+                token: ""
+            })
         } else {
-            res.json({ estado: "error", message: `No se pudo setear el Rol` })
+            res.json({ 
+                estado: "error", 
+                data: `No se pudo setear el Rol` ,
+                token: ""
+            })
         }
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-        res.json({ estado: "error", data: error, rollback: rollback })
+        res.json({ estado: "error", data: error, token: "" })
     }
 }
 
@@ -105,13 +130,13 @@ export async function setPersona(req: any, res: Response) {
         const update: any = await queryGenerica("UPDATE usuario SET idPersona = ? WHERE id = ?", [Usuario.idPersona, Usuario.id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
-            res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` })
+            res.json({ estado: "success", data: `Se han actualizado ${update.affectedRows} registros`, token:"" })
         } else {
-            res.json({ estado: "error", message: `No se pudo setear la Persona` })
+            res.json({ estado: "error", data: `No se pudo setear la Persona`, token: "" })
         }
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-        res.json({ estado: "error", data: error, rollback: rollback })
+        res.json({ estado: "error", data: error, token: "" })
     }
 }
 
@@ -124,18 +149,20 @@ export async function uploadAvatar(req: any, res: Response) {
     if (!req.files) {
         return res.status(400).json({
             estado: "error",
-            mensaje: "No se encontró ninguna imagen"
+            data: "No se encontró ninguna imagen",
+            token :""
         })
     }
 
     if (!avatar.mimetype.includes("image")) {
         return res.status(400).json({
             estado: "error",
-            mensaje: "Formato de imagen incorrecto"
+            data: "Formato de imagen incorrecto",
+            token: ""
         })
     }
 
     await fileSystem.saveImageTemp(Usuario.id, avatar)
 
-    res.json({ estado: "success", message: avatar.name })
+    res.json({ estado: "success", data: avatar.name, token: "" })
 }

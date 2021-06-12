@@ -24,7 +24,8 @@ export async function create(req: any, res: Response) {
     else {
         res.json({
             estado: "error",
-            mensaje: "usted no tiene privilegios para realizar esta operación"
+            data: "usted no tiene privilegios para realizar esta operación",
+            token: ""
         })
     }
 }
@@ -44,10 +45,17 @@ export async function update(req: any, res: Response) {
             await queryGenerica('start transaction');
             await queryGenerica("UPDATE persona SET tipoDoc = ?, n_doc = ?, nombre = ?, apellido = ?, fecha_nacimiento = ? WHERE id = ?", [updPersona.tipoDoc, updPersona.n_doc, updPersona.nombre, updPersona.apellido, updPersona.fecha_nac, updPersona.id]);
             await queryGenerica('commit');
-            res.json({ estado: "success" })
+            res.json({ 
+                estado: "success",
+                data: "Operación Exitosa",
+                token: ""
+            })
         } catch (error) {
             const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-            res.json({ estado: "error", data: error, rollback: rollback })
+            res.json({ estado: "error", 
+            data: error, 
+            token: "" 
+        })
         }
     }
 }
