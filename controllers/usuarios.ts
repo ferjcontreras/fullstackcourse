@@ -24,21 +24,22 @@ export async function login(req: any, res: Response) {
                     idRol: userLoguin[0].idRol,
                     idPersona: userLoguin[0].idPersona
                 })
-                res.json({ 
-                    estado: "success", 
+                res.json({
+                    estado: "success",
                     data: {
                         id: userLoguin[0].id,
                         nick: Usuario.nick,
                         email: userLoguin[0].email,
                         idRol: userLoguin[0].idRol,
                         idPersona: userLoguin[0].idPersona
-                    },    
-                    token: tokenJwt })
+                    },
+                    token: tokenJwt
+                })
             } else {
-                res.json({ 
-                    estado: "error", 
+                res.json({
+                    estado: "error",
                     data: "La contraseña no coincide",
-                    token: "" 
+                    token: ""
                 })
             }
         });
@@ -67,9 +68,12 @@ export async function create(req: Request, res: Response) {
     }
 }
 
+export async function read(req: any, res: Response) {
+    res.json({ estado: "success", data: req.usuario })
+}
+
 export async function update(req: any, res: Response) {
     const Usuario = {
-        /*id: req.body.id,*/
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10)
     }
@@ -84,10 +88,10 @@ export async function update(req: any, res: Response) {
         }
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-        res.json({ 
-            estado: "error", 
-            data: error, 
-            token: "" 
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
         })
     }
 }
@@ -102,15 +106,15 @@ export async function setRol(req: any, res: Response) {
         const update: any = await queryGenerica("UPDATE usuario SET idRol = ? WHERE id = ?", [Usuario.idRol, Usuario.id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
-            res.json({ 
-                estado: "success", 
+            res.json({
+                estado: "success",
                 data: `Se han actualizado ${update.affectedRows} registros`,
                 token: ""
             })
         } else {
-            res.json({ 
-                estado: "error", 
-                data: `No se pudo setear el Rol` ,
+            res.json({
+                estado: "error",
+                data: `No se pudo setear el Rol`,
                 token: ""
             })
         }
@@ -130,7 +134,7 @@ export async function setPersona(req: any, res: Response) {
         const update: any = await queryGenerica("UPDATE usuario SET idPersona = ? WHERE id = ?", [Usuario.idPersona, Usuario.id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
-            res.json({ estado: "success", data: `Se han actualizado ${update.affectedRows} registros`, token:"" })
+            res.json({ estado: "success", data: `Se han actualizado ${update.affectedRows} registros`, token: "" })
         } else {
             res.json({ estado: "error", data: `No se pudo setear la Persona`, token: "" })
         }
@@ -150,7 +154,7 @@ export async function uploadAvatar(req: any, res: Response) {
         return res.status(400).json({
             estado: "error",
             data: "No se encontró ninguna imagen",
-            token :""
+            token: ""
         })
     }
 

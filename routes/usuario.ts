@@ -8,6 +8,8 @@ UsuarioRoutes.post("/login", usuarioController.login);
 
 UsuarioRoutes.post("/create", usuarioController.create);
 
+UsuarioRoutes.get("/read", verificarToken, usuarioController.read)
+
 UsuarioRoutes.put("/update", verificarToken, usuarioController.update)
 
 UsuarioRoutes.put("/setRol", usuarioController.setRol)

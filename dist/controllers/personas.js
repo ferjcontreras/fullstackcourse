@@ -39,7 +39,8 @@ function create(req, res) {
         else {
             res.json({
                 estado: "error",
-                mensaje: "usted no tiene privilegios para realizar esta operación"
+                data: "usted no tiene privilegios para realizar esta operación",
+                token: ""
             });
         }
     });
@@ -61,11 +62,18 @@ function update(req, res) {
                 yield promesas_1.default('start transaction');
                 yield promesas_1.default("UPDATE persona SET tipoDoc = ?, n_doc = ?, nombre = ?, apellido = ?, fecha_nacimiento = ? WHERE id = ?", [updPersona.tipoDoc, updPersona.n_doc, updPersona.nombre, updPersona.apellido, updPersona.fecha_nac, updPersona.id]);
                 yield promesas_1.default('commit');
-                res.json({ estado: "success" });
+                res.json({
+                    estado: "success",
+                    data: "Operación Exitosa",
+                    token: ""
+                });
             }
             catch (error) {
                 const rollback = yield promesas_1.default('rollback'); //puede ir sin await(si no necesito ningun dato del rollback)
-                res.json({ estado: "error", data: error, rollback: rollback });
+                res.json({ estado: "error",
+                    data: error,
+                    token: ""
+                });
             }
         }
     });

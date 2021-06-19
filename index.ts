@@ -7,6 +7,7 @@ import HomeRoutes from "./routes/home";
 import usuarioRoutes from "./routes/usuario";
 import RecibosRoutes from "./routes/recibos";
 import PersonasRoutes from "./routes/personas"
+
 import cors from 'cors';
 
 const MiServer = new Server();
@@ -20,12 +21,11 @@ MiServer.start(() => {
 MiServer.app.use(bodyParser.urlencoded({ extended: true }));
 MiServer.app.use(bodyParser.json());
 
-
 //Cors
 const allowedOrigins = ['http://localhost:4200'];
 
 const options: cors.CorsOptions = {
-  origin: allowedOrigins
+	origin: allowedOrigins
 };
 MiServer.app.use(cors(options));
 

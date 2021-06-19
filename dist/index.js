@@ -12,6 +12,7 @@ const home_1 = __importDefault(require("./routes/home"));
 const usuario_1 = __importDefault(require("./routes/usuario"));
 const recibos_1 = __importDefault(require("./routes/recibos"));
 const personas_1 = __importDefault(require("./routes/personas"));
+const cors_1 = __importDefault(require("cors"));
 const MiServer = new server_1.default();
 //start server
 MiServer.start(() => {
@@ -20,6 +21,12 @@ MiServer.start(() => {
 //body parser
 MiServer.app.use(body_parser_1.default.urlencoded({ extended: true }));
 MiServer.app.use(body_parser_1.default.json());
+//Cors
+const allowedOrigins = ['http://localhost:4200'];
+const options = {
+    origin: allowedOrigins
+};
+MiServer.app.use(cors_1.default(options));
 //upload
 MiServer.app.use(express_fileupload_1.default());
 //start bddMySql

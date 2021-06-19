@@ -42,7 +42,8 @@ function create(req, res) {
         else {
             res.json({
                 estado: "error",
-                mensaje: "usted no tiene privilegios para realizar esta operación"
+                data: "usted no tiene privilegios para realizar esta operación",
+                token: ""
             });
         }
     });
@@ -58,25 +59,29 @@ function uploadRecibo(req, res) {
             if (!req.files) {
                 return res.status(400).json({
                     estado: "error",
-                    mensaje: "No se encontró ningún archivo"
+                    data: "No se encontró ningún archivo",
+                    token: ""
                 });
             }
             if (!archivo.mimetype.includes("image") && !archivo.mimetype.includes("pdf")) { // solo permite archivos de imagenes y pdf
                 return res.status(400).json({
                     estado: "error",
-                    mensaje: "Formato de imagen incorrecto"
+                    data: "Formato de imagen incorrecto",
+                    token: ""
                 });
             }
             yield fileSystem.saveReciboTemp(Recibo.idUsuario, archivo);
             res.json({
                 estado: "success",
-                data: archivo
+                data: archivo,
+                token: ""
             });
         }
         else {
             res.json({
                 estado: "error",
-                mensaje: "Usted no tiene privilegios para realizar esta operación"
+                data: "Usted no tiene privilegios para realizar esta operación",
+                token: ""
             });
         }
     });

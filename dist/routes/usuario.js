@@ -25,6 +25,7 @@ const usuarioController = __importStar(require("../controllers/usuarios"));
 const UsuarioRoutes = express_1.Router(); //no new! Router no es clase
 UsuarioRoutes.post("/login", usuarioController.login);
 UsuarioRoutes.post("/create", usuarioController.create);
+UsuarioRoutes.get("/read", authentication_1.verificarToken, usuarioController.read);
 UsuarioRoutes.put("/update", authentication_1.verificarToken, usuarioController.update);
 UsuarioRoutes.put("/setRol", usuarioController.setRol);
 UsuarioRoutes.put("/setPersona", usuarioController.setPersona);

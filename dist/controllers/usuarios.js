@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadAvatar = exports.setPersona = exports.setRol = exports.update = exports.create = exports.login = void 0;
+exports.uploadAvatar = exports.setPersona = exports.setRol = exports.update = exports.read = exports.create = exports.login = void 0;
 const token_1 = __importDefault(require("../class/token"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const email_1 = __importDefault(require("../class/email"));
@@ -36,10 +36,24 @@ function login(req, res) {
                         idRol: userLoguin[0].idRol,
                         idPersona: userLoguin[0].idPersona
                     });
-                    res.json({ estado: "success", token: tokenJwt });
+                    res.json({
+                        estado: "success",
+                        data: {
+                            id: userLoguin[0].id,
+                            nick: Usuario.nick,
+                            email: userLoguin[0].email,
+                            idRol: userLoguin[0].idRol,
+                            idPersona: userLoguin[0].idPersona
+                        },
+                        token: tokenJwt
+                    });
                 }
                 else {
-                    res.json({ estado: "error", message: "La contraseña no coincide" });
+                    res.json({
+                        estado: "error",
+                        data: "La contraseña no coincide",
+                        token: ""
+                    });
                 }
             });
         }
@@ -72,6 +86,12 @@ function create(req, res) {
     });
 }
 exports.create = create;
+function read(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        res.json({ estado: "success", data: req.usuario });
+    });
+}
+exports.read = read;
 function update(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const Usuario = {
@@ -92,7 +112,11 @@ function update(req, res) {
         }
         catch (error) {
             const rollback = yield promesas_1.default('rollback'); //puede ir sin await(si no necesito ningun dato del rollback)
-            res.json({ estado: "error", data: error, rollback: rollback });
+            res.json({
+                estado: "error",
+                data: error,
+                token: ""
+            });
         }
     });
 }
@@ -108,15 +132,23 @@ function setRol(req, res) {
             const update = yield promesas_1.default("UPDATE usuario SET idRol = ? WHERE id = ?", [Usuario.idRol, Usuario.id]);
             yield promesas_1.default('commit');
             if (update.affectedRows > 0) {
-                res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` });
+                res.json({
+                    estado: "success",
+                    data: `Se han actualizado ${update.affectedRows} registros`,
+                    token: ""
+                });
             }
             else {
-                res.json({ estado: "error", message: `No se pudo setear el Rol` });
+                res.json({
+                    estado: "error",
+                    data: `No se pudo setear el Rol`,
+                    token: ""
+                });
             }
         }
         catch (error) {
             const rollback = yield promesas_1.default('rollback'); //puede ir sin await(si no necesito ningun dato del rollback)
-            res.json({ estado: "error", data: error, rollback: rollback });
+            res.json({ estado: "error", data: error, token: "" });
         }
     });
 }
@@ -132,15 +164,15 @@ function setPersona(req, res) {
             const update = yield promesas_1.default("UPDATE usuario SET idPersona = ? WHERE id = ?", [Usuario.idPersona, Usuario.id]);
             yield promesas_1.default('commit');
             if (update.affectedRows > 0) {
-                res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` });
+                res.json({ estado: "success", data: `Se han actualizado ${update.affectedRows} registros`, token: "" });
             }
             else {
-                res.json({ estado: "error", message: `No se pudo setear la Persona` });
+                res.json({ estado: "error", data: `No se pudo setear la Persona`, token: "" });
             }
         }
         catch (error) {
             const rollback = yield promesas_1.default('rollback'); //puede ir sin await(si no necesito ningun dato del rollback)
-            res.json({ estado: "error", data: error, rollback: rollback });
+            res.json({ estado: "error", data: error, token: "" });
         }
     });
 }
@@ -154,17 +186,19 @@ function uploadAvatar(req, res) {
         if (!req.files) {
             return res.status(400).json({
                 estado: "error",
-                mensaje: "No se encontró ninguna imagen"
+                data: "No se encontró ninguna imagen",
+                token: ""
             });
         }
         if (!avatar.mimetype.includes("image")) {
             return res.status(400).json({
                 estado: "error",
-                mensaje: "Formato de imagen incorrecto"
+                data: "Formato de imagen incorrecto",
+                token: ""
             });
         }
         yield fileSystem.saveImageTemp(Usuario.id, avatar);
-        res.json({ estado: "success", message: avatar.name });
+        res.json({ estado: "success", data: avatar.name, token: "" });
     });
 }
 exports.uploadAvatar = uploadAvatar;

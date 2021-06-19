@@ -14,7 +14,8 @@ function index(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         res.json({
             estado: "success",
-            mensaje: 'Usted está en Home'
+            data: 'Usted está en Home',
+            token: ""
         });
     });
 }
