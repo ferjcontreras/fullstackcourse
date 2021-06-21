@@ -39,9 +39,9 @@ export default class email {
                 text: emailCuerpo,
                 html: html,
                 attachments: [
-                    {
-                        path: path.resolve(__dirname, '../assets', 'imagen_default.png')
-                    }
+                //    {
+                  //      path: path.resolve(__dirname, '../assets', 'imagen_default.png')
+                  //  }
                 ]
             }
 
