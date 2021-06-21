@@ -18,4 +18,6 @@ UsuarioRoutes.put("/setPersona", usuarioController.setPersona)
 
 UsuarioRoutes.post("/uploadAvatar", usuarioController.uploadAvatar)
 
+UsuarioRoutes.post("/generarClave", usuarioController.generarClave)
+
 export default UsuarioRoutes;
