@@ -12,6 +12,8 @@ UsuarioRoutes.get("/read", verificarToken, usuarioController.read)
 
 UsuarioRoutes.put("/update", verificarToken, usuarioController.update)
 
+UsuarioRoutes.put("/changePassword", verificarToken, usuarioController.changePassword)
+
 UsuarioRoutes.put("/setRol", usuarioController.setRol)
 
 UsuarioRoutes.put("/setPersona", usuarioController.setPersona)

@@ -74,12 +74,34 @@ export async function read(req: any, res: Response) {
 
 export async function update(req: any, res: Response) {
     const Usuario = {
-        email: req.body.email,
+        email: req.body.email
+    }
+    try {
+        await queryGenerica('start transaction');
+        const update: any = await queryGenerica("UPDATE usuario SET email = ? WHERE id = ?", [Usuario.email, req.usuario._id]);
+        await queryGenerica('commit');
+        if (update.affectedRows > 0) {
+            res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` })
+        } else {
+            res.json({ estado: "error", message: `No se encontraron usuarios para actualizar` })
+        }
+    } catch (error) {
+        const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
+        })
+    }
+}
+
+export async function changePassword(req: any, res: Response) {
+    const Usuario = {
         password: bcrypt.hashSync(req.body.password, 10)
     }
     try {
         await queryGenerica('start transaction');
-        const update: any = await queryGenerica("UPDATE usuario SET email = ?, password= ? WHERE id = ?", [Usuario.email, Usuario.password, req.usuario._id]);
+        const update: any = await queryGenerica("UPDATE usuario SET password = ? WHERE id = ?", [Usuario.password, req.usuario._id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
             res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` })
