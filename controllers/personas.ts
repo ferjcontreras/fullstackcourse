@@ -6,11 +6,11 @@ import emailClass from '../class/email';
 
 export async function create(req: any, res: Response) {
     const newPersona = {
-        tipoDoc: req.body.tipoDoc,
-        n_doc: req.body.n_doc,
-        nombre: req.body.nombre,
-        apellido: req.body.apellido,
-        fecha_nac: req.body.fecha_nac,
+        tipoDoc: req.body.tipo_Doc,
+        n_doc: req.body.num_Doc,
+        nombre: req.body.nombre_persona,
+        apellido: req.body.apellido_persona,
+        fecha_nac: req.body.fecha_Nac,
         email: req.body.email
     }
     //console.log(req.usuario);
