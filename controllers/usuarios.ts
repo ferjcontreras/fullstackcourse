@@ -64,17 +64,17 @@ export async function create(req: Request, res: Response) {
         res.json({ estado: "success" })
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-        res.json({ 
-            estado: "error", 
-            data: error, 
-            token: "" 
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
         })
     }
 }
 
 export async function read(req: any, res: Response) {
-    res.json({ 
-        estado: "success", 
+    res.json({
+        estado: "success",
         data: req.usuario,
         token: ""
     })
@@ -88,8 +88,9 @@ export async function update(req: any, res: Response) {
         await queryGenerica('start transaction');
         const update: any = await queryGenerica("UPDATE usuario SET email = ? WHERE id = ?", [Usuario.email, req.usuario._id]);
         await queryGenerica('commit');
+        const messageUsuarioRetorno = req.usuario; messageUsuarioRetorno.email = Usuario.email;
         if (update.affectedRows > 0) {
-            res.json({ estado: "success", message: `Se han actualizado ${update.affectedRows} registros` })
+            res.json({ estado: "success", message: messageUsuarioRetorno })
         } else {
             res.json({ estado: "error", message: `No se encontraron usuarios para actualizar` })
         }
@@ -112,15 +113,15 @@ export async function changePassword(req: any, res: Response) {
         const update: any = await queryGenerica("UPDATE usuario SET password = ? WHERE id = ?", [Usuario.password, req.usuario._id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
-            res.json({ 
-                estado: "success", 
+            res.json({
+                estado: "success",
                 data: `Se han actualizado ${update.affectedRows} registros`,
-                token: "" 
+                token: ""
             })
         } else {
-            res.json({ 
-                estado: "error", 
-                data: `No se encontraron usuarios para actualizar`, 
+            res.json({
+                estado: "error",
+                data: `No se encontraron usuarios para actualizar`,
                 token: ""
             })
         }
@@ -158,10 +159,10 @@ export async function setRol(req: any, res: Response) {
         }
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-        res.json({ 
-            estado: "error", 
-            data: error, 
-            token: "" 
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
         })
     }
 }
@@ -176,23 +177,24 @@ export async function setPersona(req: any, res: Response) {
         const update: any = await queryGenerica("UPDATE usuario SET idPersona = ? WHERE id = ?", [Usuario.idPersona, Usuario.id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
-            res.json({ 
-                estado: "success", 
-                data: `Se han actualizado ${update.affectedRows} registros`, 
-                token: "" 
+            res.json({
+                estado: "success",
+                data: `Se han actualizado ${update.affectedRows} registros`,
+                token: ""
             })
         } else {
-            res.json({ 
-                estado: "error", 
-                data: `No se pudo setear la Persona`, 
-                token: "" })
+            res.json({
+                estado: "error",
+                data: `No se pudo setear la Persona`,
+                token: ""
+            })
         }
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-        res.json({ 
-            estado: "error", 
-            data: error, 
-            token: "" 
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
         })
     }
 }
@@ -225,31 +227,31 @@ export async function uploadAvatar(req: any, res: Response) {
 }
 
 export async function generarClave(req: any, res: Response) {
-    
+
     const uHash = req.body.userHash; // hash, viene en el url
     const newPass = bcrypt.hashSync(req.body.password, 10); // password, viene en el body
     //const nick = req.body.nick;
 
     try {
         await queryGenerica('start transaction');
-        const update: any = await queryGenerica("UPDATE usuario SET password = ? WHERE hash = ?",[newPass, uHash]);
-        const registroPersona: any =  await queryGenerica("SELECT persona.nombre, persona.apellido, persona.m_doc FROM persona LEFT JOIN usuario WHERE usuario.hash = ? ",[uHash]);
+        const update: any = await queryGenerica("UPDATE usuario SET password = ? WHERE hash = ?", [newPass, uHash]);
+        const registroPersona: any = await queryGenerica("SELECT persona.nombre, persona.apellido, persona.m_doc FROM persona LEFT JOIN usuario WHERE usuario.hash = ? ", [uHash]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
             console.log(update)
             // Le devolvemos info al usuario por email
-      //      const UsuarioCreado: any = await queryGenerica("SELECT persona.nombre, persona.apellido, persona.n_doc FROM ");
+            //      const UsuarioCreado: any = await queryGenerica("SELECT persona.nombre, persona.apellido, persona.n_doc FROM ");
 
-            res.json({ 
-                estado: "success", 
+            res.json({
+                estado: "success",
                 data: `Clave generada correctamente`,
-                token: "" 
+                token: ""
             })
         } else {
-            res.json({ 
-                estado: "error", 
+            res.json({
+                estado: "error",
                 message: `Error al actualizar clave`,
-                token: "" 
+                token: ""
             })
         }
     } catch (error) {
