@@ -28,7 +28,7 @@ export async function create(req: any, res: Response) {
             // Emvío de email
             const email = new emailClass();
             //await email.enviarEmail(req.body.email, 'Creación de Usuario', '', `<p><b>Hola  ${newPersona.nombre}  ${newPersona.apellido}! </b></p> <p> Tu registro ha sido creado exitosamente! El nick de tu usuario es ${newPersona.n_doc} </p><p> Para generar la clave solo tienes que hacer click <a href="http://localhost:4200/generarPassword/${hashAleatorio}">aqu&iacute;</a></p> `)
-            await email.enviarEmail(req.body.email, 'Creación de Usuario', '', "<b>Hola "+newPersona.nombre+" "+newPersona.apellido+"!</b><p>Tu registro ha sido creado! Nick: "+newPersona.n_doc+"</p><p>Para generar su clave haga click <a href='http://localhost:4200/"+hashAleatorio+"'>aquí</a></p>")
+            await email.enviarEmail(req.body.email, 'Creación de Usuario', '', "<b>Hola "+newPersona.nombre+" "+newPersona.apellido+"!</b><p>Tu registro ha sido creado! Nick: "+newPersona.n_doc+"</p><p>Para generar su clave haga click <a href='http://localhost:4200/generarClave/"+hashAleatorio+"'>aquí</a></p>")
             res.json({ 
                 estado: "success",
                 message: "Persona creada correctamente!",

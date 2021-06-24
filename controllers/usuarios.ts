@@ -235,7 +235,7 @@ export async function generarClave(req: any, res: Response) {
     try {
         await queryGenerica('start transaction');
         const update: any = await queryGenerica("UPDATE usuario SET password = ? WHERE hash = ?", [newPass, uHash]);
-        const registroPersona: any = await queryGenerica("SELECT persona.nombre, persona.apellido, persona.m_doc FROM persona LEFT JOIN usuario WHERE usuario.hash = ? ", [uHash]);
+        const registroPersona: any = await queryGenerica("SELECT persona.nombre, persona.apellido, persona.n_doc FROM persona LEFT JOIN usuario ON persona.id = usuario.idPersona WHERE usuario.hash = ? ", [uHash]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
             console.log(update)
@@ -248,6 +248,7 @@ export async function generarClave(req: any, res: Response) {
                 token: ""
             })
         } else {
+            console.log(update)
             res.json({
                 estado: "error",
                 message: `Error al actualizar clave`,
