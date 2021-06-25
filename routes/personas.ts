@@ -8,4 +8,6 @@ PersonasRoutes.post("/create", verificarToken, personaController.create)
 
 PersonasRoutes.post("/update", verificarToken, personaController.update)
 
+PersonasRoutes.get("/readAll", verificarToken, personaController.readAll)
+
 export default PersonasRoutes;
