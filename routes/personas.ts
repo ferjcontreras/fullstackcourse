@@ -10,4 +10,6 @@ PersonasRoutes.post("/update", verificarToken, personaController.update)
 
 PersonasRoutes.get("/readAll", verificarToken, personaController.readAll)
 
+PersonasRoutes.post("/readOne", verificarToken, personaController.readOne)
+
 export default PersonasRoutes;

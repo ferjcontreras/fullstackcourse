@@ -95,3 +95,16 @@ export async function readAll(req: Request, res: Response) {
         })
     }
 }
+
+export async function readOne(req: Request, res: Response) {
+    try {
+        const persona: any = await queryGenerica("SELECT p.id,p.tipoDoc,p.n_doc,p.nombre,p.apellido,p.fecha_nacimiento,u.email FROM persona p INNER JOIN usuario u where p.n_doc = ? and p.id = u.idPersona", [req.body.n_doc]);
+        res.json({ estado: "success", data: persona })
+    } catch (error) {
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
+        })
+    }
+}
