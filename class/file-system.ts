@@ -64,26 +64,26 @@ export default class FileSystem {
         if (!fs.existsSync(pathReciboPost)) {
             fs.mkdirSync(pathReciboPost)
         }
-        
-        const Nombrerecibo:string = this.obtenerReciboTemp(userID);
+
+        const Nombrerecibo: string = this.obtenerReciboTemp(userID);
 
         //console.log("Nombre del recibo ",Nombrerecibo)
-     
-        // Se trata de un solo recibo por lo tanto no genero arreglo, traigo uno solo
-        fs.renameSync(`${pathReciboTemp}/${Nombrerecibo}` , `${pathReciboPost}/${Nombrerecibo}`);
 
-        
+        // Se trata de un solo recibo por lo tanto no genero arreglo, traigo uno solo
+        fs.renameSync(`${pathReciboTemp}/${Nombrerecibo}`, `${pathReciboPost}/${Nombrerecibo}`);
+
+
         return Nombrerecibo;
 
     }
 
-    private obtenerReciboTemp(userID: string):string {
+    private obtenerReciboTemp(userID: string): string {
         const pathTemp = path.resolve(__dirname, '../uploads', userID, "recibos/temp");
         //console.log("estoy leyendo de: ", pathTemp)
         return fs.readdirSync(pathTemp)[0];
     }
 
-    private createFolderRecibo(userID:string) {
+    private createFolderRecibo(userID: string) {
         const pathUser = path.resolve(__dirname, "../uploads", userID, "recibos");
         const pathUserTemp = pathUser + "/temp";
 
@@ -107,6 +107,16 @@ export default class FileSystem {
                 }
             })
         })
+    }
+
+    getAvatar(userId: string, avatarName: string): string {
+
+        const pathFoto: string = path.resolve(__dirname, '../uploads', userId, avatarName);
+        if (fs.existsSync(pathFoto)) {
+            return pathFoto
+        } else {
+            return path.resolve(__dirname, '../assets/default-avatar.jpg')
+        }
     }
 
 }

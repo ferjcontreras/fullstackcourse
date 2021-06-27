@@ -22,4 +22,6 @@ UsuarioRoutes.post("/uploadAvatar", usuarioController.uploadAvatar)
 
 UsuarioRoutes.post("/generarClave", usuarioController.generarClave)
 
+UsuarioRoutes.get("/getAvatar", verificarToken, usuarioController.getAvatar)
+
 export default UsuarioRoutes;

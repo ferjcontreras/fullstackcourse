@@ -6,7 +6,7 @@ const PersonasRoutes = Router();
 
 PersonasRoutes.post("/create", verificarToken, personaController.create)
 
-PersonasRoutes.post("/update", verificarToken, personaController.update)
+PersonasRoutes.put("/update", verificarToken, personaController.update)
 
 PersonasRoutes.get("/readAll", verificarToken, personaController.readAll)
 

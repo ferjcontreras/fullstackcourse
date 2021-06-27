@@ -55,12 +55,12 @@ export async function create(req: any, res: Response) {
 export async function update(req: any, res: Response) {
     // Los usuarios pueden modificar sus datos como Nombre, Apellido, Fecha de Nacimiento, Tipo y Numero de Doc
     const updPersona = {
-        id: req.body.idPersona,
+        id: req.body.id,
         tipoDoc: req.body.tipoDoc,
         n_doc: req.body.n_doc,
         nombre: req.body.nombre,
         apellido: req.body.apellido,
-        fecha_nac: req.body.fecha_nac
+        fecha_nac: req.body.fecha_Nac
     }
     if (req.usuario.idRol == 1 || req.usuario.idRol == 2) { // solo permite agregar el recibo si tiene el rol de admin o contador
         try {

@@ -14,7 +14,7 @@ export async function login(req: any, res: Response) {
         password: req.body.password
     }
     try {
-        const userLoguin: any = await queryGenerica("SELECT id, password, email, idRol, idPersona FROM usuario WHERE nick = ?", [Usuario.nick]);
+        const userLoguin: any = await queryGenerica("SELECT id, password, email, idRol, idPersona, avatar FROM usuario WHERE nick = ?", [Usuario.nick]);
         bcrypt.compare(Usuario.password, userLoguin[0].password, function (err, res2) {
             if (res2) {
                 const tokenJwt = Token.getToken({
@@ -22,7 +22,8 @@ export async function login(req: any, res: Response) {
                     nick: Usuario.nick,
                     email: userLoguin[0].email,
                     idRol: userLoguin[0].idRol,
-                    idPersona: userLoguin[0].idPersona
+                    idPersona: userLoguin[0].idPersona,
+                    avatar: userLoguin[0].avatar
                 })
                 res.json({
                     estado: "success",
@@ -31,7 +32,8 @@ export async function login(req: any, res: Response) {
                         nick: Usuario.nick,
                         email: userLoguin[0].email,
                         idRol: userLoguin[0].idRol,
-                        idPersona: userLoguin[0].idPersona
+                        idPersona: userLoguin[0].idPersona,
+                        avatar: userLoguin[0].avatar
                     },
                     token: tokenJwt
                 })
@@ -263,4 +265,9 @@ export async function generarClave(req: any, res: Response) {
             token: ""
         })
     }
+}
+
+export async function getAvatar(req: any, res: Response) {
+    const avatarName: any = await queryGenerica("SELECT avatar FROM usuario WHERE id = ?", [req.usuario._id]);
+    res.sendFile(fileSystem.getAvatar(String(req.usuario._id), avatarName[0].avatar));
 }
