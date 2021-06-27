@@ -60,12 +60,14 @@ export async function update(req: any, res: Response) {
         n_doc: req.body.n_doc,
         nombre: req.body.nombre,
         apellido: req.body.apellido,
-        fecha_nac: req.body.fecha_Nac
+        fecha_nac: req.body.fecha_Nac,
+        email: req.body.email
     }
     if (req.usuario.idRol == 1 || req.usuario.idRol == 2) { // solo permite agregar el recibo si tiene el rol de admin o contador
         try {
             await queryGenerica('start transaction');
             await queryGenerica("UPDATE persona SET tipoDoc = ?, n_doc = ?, nombre = ?, apellido = ?, fecha_nacimiento = ? WHERE id = ?", [updPersona.tipoDoc, updPersona.n_doc, updPersona.nombre, updPersona.apellido, updPersona.fecha_nac, updPersona.id]);
+            await queryGenerica("UPDATE usuario SET email = ? WHERE id = ?", [updPersona.email, updPersona.id]);
             await queryGenerica('commit');
             res.json({
                 estado: "success",
