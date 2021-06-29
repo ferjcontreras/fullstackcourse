@@ -83,11 +83,24 @@ export default class FileSystem {
         return fs.readdirSync(pathTemp)[0];
     }
 
+    private borrarRecibosTemporales(userID: string) {
+        const pathTemp = path.resolve(__dirname, '../uploads', userID, "recibos/temp");
+        const temporales = fs.readdirSync(pathTemp)
+
+        temporales.forEach(temporal=>{
+            fs.unlinkSync(`${pathTemp}/${temporal}`);
+        })
+    }
+
     private createFolderRecibo(userID: string) {
         const pathUser = path.resolve(__dirname, "../uploads", userID, "recibos");
         const pathUserTemp = pathUser + "/temp";
 
+        //console.log("pathUserTemp "+pathUserTemp)
+        //console.log("pathUser "+pathUser)
+
         if (!fs.existsSync(pathUser)) {
+            fs.mkdirSync(path.resolve(__dirname, "../uploads", userID))
             fs.mkdirSync(pathUser);
             fs.mkdirSync(pathUserTemp);
         }
@@ -95,6 +108,7 @@ export default class FileSystem {
     }
 
     saveReciboTemp(userID: string, file: IfileUpload) {
+        this.borrarRecibosTemporales(userID)
         return new Promise((resolve, reject) => {
             const pathUserTemp = this.createFolderRecibo(userID);
             const fileName = this.generateUniqueName(file.name);
