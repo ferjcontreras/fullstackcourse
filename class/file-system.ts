@@ -85,14 +85,20 @@ export default class FileSystem {
 
     private borrarRecibosTemporales(userID: string) {
         const pathTemp = path.resolve(__dirname, '../uploads', userID, "recibos/temp");
-        const temporales = fs.readdirSync(pathTemp)
 
-        temporales.forEach(temporal=>{
-            fs.unlinkSync(`${pathTemp}/${temporal}`);
-        })
+        if (fs.existsSync(pathTemp)) {
+            const temporales = fs.readdirSync(pathTemp)
+
+            temporales.forEach(temporal=>{
+                fs.unlinkSync(`${pathTemp}/${temporal}`);
+            })
+        }
+       
     }
 
     private createFolderRecibo(userID: string) {
+
+
         const pathUser = path.resolve(__dirname, "../uploads", userID, "recibos");
         const pathUserTemp = pathUser + "/temp";
 

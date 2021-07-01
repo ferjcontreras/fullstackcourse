@@ -8,23 +8,33 @@ const fileSystem = new fs();
 export async function create(req: any, res: Response) {
     const newRecibo = {
         idUsuarioContador: req.usuario._id,
-        idUsuarioEmpleado: req.body.id_usuario_empleado,
+        idUsuarioEmpleado: req.body.id_usuario_empleado+"",
         idTipoRecibo: req.body.id_tipo_recibo,
         fecha: req.body.fecha,
-        sueldo_neto: req.body.sueldo_neto,
-        sueldo_bruto: req.body.sueldo_bruto
+        sueldo_neto: req.body.sueldo_neto+"",
+        sueldo_bruto: req.body.sueldo_bruto+""
     }
+
 
     if (req.usuario.idRol == 2) { // solo permite agregar el recibo si tiene el rol de contador
         try {
             const archivoRecibo = await fileSystem.fileFromTempToRecibos(newRecibo.idUsuarioEmpleado);
             await queryGenerica('start transaction');
-            await queryGenerica("INSERT INTO recibo (idUsuarioContador, idUsuarioEmpleado, idTipoRecibo, fecha, sueldo_neto, sueldo_bruto, archivo) VALUES (?,?,?,?,?,?,?)", [newRecibo.idUsuarioEmpleado, newRecibo.idUsuarioEmpleado, newRecibo.idTipoRecibo, newRecibo.fecha, newRecibo.sueldo_neto, newRecibo.sueldo_bruto, archivoRecibo]);
+            await queryGenerica("INSERT INTO recibo (idUsuarioContador, idUsuarioEmpleado, idTipoRecibo, fecha, sueldo_neto, sueldo_bruto, archivo) VALUES (?,?,?,?,?,?,?)", [newRecibo.idUsuarioEmpleado, newRecibo.idUsuarioEmpleado, newRecibo.idTipoRecibo, newRecibo.fecha, newRecibo.sueldo_neto, newRecibo.sueldo_bruto, archivoRecibo.toString()]);
             await queryGenerica('commit');
-            res.json({ estado: "success" })
+            res.json({ 
+                estado: "success",
+                data: "Recibo Agregado Correctamente",
+                token: "" 
+            })
         } catch (error) {
             const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
-            res.json({ estado: "error", data: error, rollback: rollback })
+            res.json(
+                { 
+                    estado: "error", 
+                    data: error, 
+                    token: "" 
+                })
         }
     }
     else {
