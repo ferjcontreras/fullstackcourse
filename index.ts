@@ -9,6 +9,7 @@ import RecibosRoutes from "./routes/recibos";
 import PersonasRoutes from "./routes/personas"
 
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 const MiServer = new Server();
 
@@ -28,6 +29,15 @@ const options: cors.CorsOptions = {
 	origin: allowedOrigins
 };
 MiServer.app.use(cors(options));
+
+
+//limitador peticiones 
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // limit each IP to 100 requests per windowMs
+	message: "Ha superado el limite de peticiones"
+});
+MiServer.app.use(limiter);
 
 //upload
 MiServer.app.use(fileUpload());
