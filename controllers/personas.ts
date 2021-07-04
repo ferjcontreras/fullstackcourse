@@ -6,10 +6,10 @@ import emailClass from '../class/email';
 
 export async function create(req: any, res: Response) {
     const newPersona = {
-        tipoDoc: req.body.tipo_Doc,
-        n_doc: req.body.num_Doc,
-        nombre: req.body.nombre_persona,
-        apellido: req.body.apellido_persona,
+        tipoDoc: req.body.tipoDoc,
+        n_doc: req.body.n_doc,
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
         fecha_nac: req.body.fecha_Nac,
         email: req.body.email
     }
@@ -67,7 +67,7 @@ export async function update(req: any, res: Response) {
         try {
             await queryGenerica('start transaction');
             await queryGenerica("UPDATE persona SET tipoDoc = ?, n_doc = ?, nombre = ?, apellido = ?, fecha_nacimiento = ? WHERE id = ?", [updPersona.tipoDoc, updPersona.n_doc, updPersona.nombre, updPersona.apellido, updPersona.fecha_nac, updPersona.id]);
-            await queryGenerica("UPDATE usuario SET email = ? WHERE id = ?", [updPersona.email, updPersona.id]);
+            await queryGenerica("UPDATE usuario SET email = ? WHERE idPersona = ?", [updPersona.email, updPersona.id]);
             await queryGenerica('commit');
             res.json({
                 estado: "success",
@@ -86,8 +86,14 @@ export async function update(req: any, res: Response) {
 }
 
 export async function readAll(req: Request, res: Response) {
+    const needEmpleados: boolean = (req.get("empleado") == "true");
+    let personas: any = {};
     try {
-        const personas: any = await queryGenerica("SELECT * FROM persona");
+        if (needEmpleados) {
+            personas = await queryGenerica("SELECT p.*, u.id as idUsuario FROM persona p inner join usuario u WHERE p.id = u.idPersona and idRol = 3");
+        } else {
+            personas = await queryGenerica("SELECT p.*, u.id as idUsuario FROM persona p inner join usuario u WHERE p.id = u.idPersona");
+        }
         res.json({ estado: "success", data: personas })
     } catch (error) {
         res.json({
@@ -100,7 +106,7 @@ export async function readAll(req: Request, res: Response) {
 
 export async function readOne(req: Request, res: Response) {
     try {
-        const persona: any = await queryGenerica("SELECT p.id,p.tipoDoc,p.n_doc,p.nombre,p.apellido,p.fecha_nacimiento,u.email FROM persona p INNER JOIN usuario u where p.n_doc = ? and p.id = u.idPersona", [req.body.n_doc]);
+        const persona: any = await queryGenerica("SELECT p.*,u.email FROM persona p INNER JOIN usuario u where p.n_doc = ? and p.id = u.idPersona", [req.body.n_doc]);
         res.json({ estado: "success", data: persona })
     } catch (error) {
         res.json({

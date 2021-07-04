@@ -92,9 +92,9 @@ export async function update(req: any, res: Response) {
         await queryGenerica('commit');
         const messageUsuarioRetorno = req.usuario; messageUsuarioRetorno.email = Usuario.email;
         if (update.affectedRows > 0) {
-            res.json({ estado: "success", message: messageUsuarioRetorno })
+            res.json({ estado: "success", data: messageUsuarioRetorno })
         } else {
-            res.json({ estado: "error", message: `No se encontraron usuarios para actualizar` })
+            res.json({ estado: "error", data: `No se encontraron usuarios para actualizar` })
         }
     } catch (error) {
         const rollback = await queryGenerica('rollback');   //puede ir sin await(si no necesito ningun dato del rollback)
