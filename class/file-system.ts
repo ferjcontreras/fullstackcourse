@@ -139,4 +139,13 @@ export default class FileSystem {
         }
     }
 
+    getArchivoUrl(userId: string, archivo: string) {
+        const pathRecibo:string = path.resolve(__dirname, '../uploads', userId, "recibos/post", archivo);
+        console.log(pathRecibo)
+        if(fs.existsSync(pathRecibo)){
+            return pathRecibo
+        }
+        return "no_encontrado.pdf"
+    }
+
 }

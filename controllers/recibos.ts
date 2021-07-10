@@ -84,3 +84,30 @@ export async function uploadRecibo(req: any, res: Response) {
         })
     }
 }
+
+export async function readAll(req: any, res: Response) {
+    const userId = req.usuario._id;
+    try {
+        const recibos: any = await queryGenerica("SELECT * FROM recibo WHERE idUsuarioEmpleado = ?", [ userId ]);
+        res.json({ estado: "success", data: recibos })
+    } catch (error) {
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
+        })
+    }
+}
+
+export async function getArchivo(req: Request, res: Response) {
+
+    const img = req.params.archivo;
+    const userId = req.params.userId;
+
+    const recibo = fileSystem.getArchivoUrl(userId+"", img);
+
+    console.log("recibo: "+recibo)
+
+    res.sendFile(recibo);
+   
+}
