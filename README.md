@@ -1,8 +1,10 @@
 # Proyecto Final Programador Web FullStack Avanzado UTN-BA
-###### Authors: *Fernando Contreras & Patricio Pittavino*
+###### Authors: 
+*Fernando Contreras (ferjcontreras@gmail.com) 
+Patricio Pittavino (pitta1881@gmail.com)*
 
 #### About
-This is the BACKEND of a Web Development with a CRUD system for Users and Paycheck, allowing each user to List and Download it´s paycheck, and the admin to Upload and Register both users and paychecks.
+This is the BACKEND of a Web Development with a CRUD system for Users and Paycheck, allowing each user to List and Download its paycheck, and the admin to Upload and Register both users and paychecks.
 
 #### Instructions
 Place on root folder and run
@@ -17,4 +19,4 @@ Now your server is listening http://localhost:3000/
 ##### BACKEND: https://github.com/ferjcontreras/fullstackcourse
 ##### FRONTEND: https://github.com/ferjcontreras/frontendfullstackcourse
 
-##### Tags: Node.JS, Express.JS, MySQL, Angular 12, Bootstrap, Angular Material.
+###### Tags: Node.JS, Express.JS, MySQL, Angular 12, Bootstrap, Angular Material.
