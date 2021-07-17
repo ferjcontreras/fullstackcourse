@@ -20,3 +20,18 @@ Now your server is listening http://localhost:3000/
 ##### FRONTEND: https://github.com/ferjcontreras/frontendfullstackcourse
 
 ###### Tags: Node.JS, Express.JS, MySQL, Angular 12, Bootstrap, Angular Material.
+
+### Database settings
+You will find a file named recibos_app.sql. It has the SQL sentences for the MySQL schema.
+
+### Login
+There are two users:
+user1 - nick: empleado
+user2 - nick: contador
+
+both of them with passwrod: toto
+
+User contador is he one who can upload payccheks and modify and add new people to the system.
+User empleado just can modify the profile and donwload the paycheks.
+
+
