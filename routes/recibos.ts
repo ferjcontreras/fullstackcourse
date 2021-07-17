@@ -12,4 +12,6 @@ RecibosRoutes.get("/readAll", verificarToken, recibosController.readAll)
 
 RecibosRoutes.get("/getArchivo/:archivo/:userId", recibosController.getArchivo)
 
+RecibosRoutes.get("/getCantidad", verificarToken, recibosController.getCantidad)
+
 export default RecibosRoutes;

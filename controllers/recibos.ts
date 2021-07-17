@@ -87,8 +87,10 @@ export async function uploadRecibo(req: any, res: Response) {
 
 export async function readAll(req: any, res: Response) {
     const userId = req.usuario.id;
+    const pagina: number = req.get("page");
+    const limit = pagina * 10;
     try {
-        const recibos: any = await queryGenerica("SELECT * FROM recibo WHERE idUsuarioEmpleado = ?", [ userId ]);
+        const recibos: any = await queryGenerica("SELECT * FROM recibo WHERE idUsuarioEmpleado = ? ORDER BY id DESC LIMIT ?,10", [ userId, limit ]);
         res.json({ estado: "success", data: recibos })
     } catch (error) {
         res.json({
@@ -106,8 +108,20 @@ export async function getArchivo(req: Request, res: Response) {
 
     const recibo = fileSystem.getArchivoUrl(userId+"", img);
 
-    console.log("recibo: "+recibo)
-
     res.sendFile(recibo);
    
+}
+
+export async function getCantidad(req: any, res: Response) {
+    const userId = req.usuario.id;
+    try {
+        const recibos: any = await queryGenerica("SELECT COUNT(*) as c FROM recibo WHERE idUsuarioEmpleado = ?", [ userId ]);
+        res.json({ estado: "success", data: recibos })
+    } catch (error) {
+        res.json({
+            estado: "error",
+            data: error,
+            token: ""
+        })
+    }
 }
