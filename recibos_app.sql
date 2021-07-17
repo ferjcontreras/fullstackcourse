@@ -32,7 +32,7 @@ CREATE TABLE `persona` (
   PRIMARY KEY (`id`),
   KEY `FK1_PERSONA` (`tipoDoc`),
   CONSTRAINT `FK1_PERSONA` FOREIGN KEY (`tipoDoc`) REFERENCES `tipo_documento` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,10 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,1,'28086551','Contador','Pepito','1980-09-17'),(2,1,'13210770','Empleado','Juancito','0383-07-20');
+INSERT INTO `persona` VALUES 
+  (1,1,'00000000','Admin','admin','2000-01-01'),
+  (2,1,'28086551','Contador','Pepito','1980-09-17'),
+  (3,1,'13210770','Empleado','Juancito','1959-07-20');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,7 +72,7 @@ CREATE TABLE `recibo` (
   CONSTRAINT `FK1_RECIBO` FOREIGN KEY (`idUsuarioContador`) REFERENCES `usuario` (`id`),
   CONSTRAINT `FK2_RECIBO` FOREIGN KEY (`idUsuarioEmpleado`) REFERENCES `usuario` (`id`),
   CONSTRAINT `FK3_RECIBO` FOREIGN KEY (`idTipoRecibo`) REFERENCES `tipo_recibo` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65551 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,7 +95,7 @@ CREATE TABLE `rol` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,7 +119,7 @@ CREATE TABLE `tipo_documento` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +143,7 @@ CREATE TABLE `tipo_recibo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +177,7 @@ CREATE TABLE `usuario` (
   KEY `FK2_USUARIO` (`idRol`),
   CONSTRAINT `FK1_USUARIO` FOREIGN KEY (`idPersona`) REFERENCES `persona` (`id`),
   CONSTRAINT `FK2_USUARIO` FOREIGN KEY (`idRol`) REFERENCES `rol` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +186,10 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,1,2,'contador','contador@gmail.com','$2b$10$TP4UcYCD91.IXdw4okNBwO.4Bo7k7rN/V.fPsLRmBfp.scyX/b2ie','default-avatar.jpg',''),(2,2,3,'empleado','empleado@gmail.com','$2b$10$TP4UcYCD91.IXdw4okNBwO.4Bo7k7rN/V.fPsLRmBfp.scyX/b2ie','default-avatar.jpg','');
+INSERT INTO `usuario` VALUES 
+(1,1,1,'admin','admin@example.com','$2a$10$Six4lts7.1jCUamYNEae.eSS1h9Cw20r01.tARuaKINRFrbTLH.2i','default-avatar.jpg',''),
+(2,2,2,'contador','contador@gmail.com','$2b$10$TP4UcYCD91.IXdw4okNBwO.4Bo7k7rN/V.fPsLRmBfp.scyX/b2ie','default-avatar.jpg',''),
+(3,3,3,'empleado','empleado@gmail.com','$2b$10$TP4UcYCD91.IXdw4okNBwO.4Bo7k7rN/V.fPsLRmBfp.scyX/b2ie','default-avatar.jpg','');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
