@@ -18,7 +18,7 @@ export async function login(req: any, res: Response) {
         bcrypt.compare(Usuario.password, userLoguin[0].password, function (err, res2) {
             if (res2) {
                 const tokenJwt = Token.getToken({
-                    _id: userLoguin[0].id,
+                    id: userLoguin[0].id,
                     nick: Usuario.nick,
                     email: userLoguin[0].email,
                     idRol: userLoguin[0].idRol,
@@ -88,7 +88,7 @@ export async function update(req: any, res: Response) {
     }
     try {
         await queryGenerica('start transaction');
-        const update: any = await queryGenerica("UPDATE usuario SET email = ? WHERE id = ?", [Usuario.email, req.usuario._id]);
+        const update: any = await queryGenerica("UPDATE usuario SET email = ? WHERE id = ?", [Usuario.email, req.usuario.id]);
         await queryGenerica('commit');
         const messageUsuarioRetorno = req.usuario; messageUsuarioRetorno.email = Usuario.email;
         if (update.affectedRows > 0) {
@@ -112,7 +112,7 @@ export async function changePassword(req: any, res: Response) {
     }
     try {
         await queryGenerica('start transaction');
-        const update: any = await queryGenerica("UPDATE usuario SET password = ? WHERE id = ?", [Usuario.password, req.usuario._id]);
+        const update: any = await queryGenerica("UPDATE usuario SET password = ? WHERE id = ?", [Usuario.password, req.usuario.id]);
         await queryGenerica('commit');
         if (update.affectedRows > 0) {
             res.json({
@@ -203,9 +203,6 @@ export async function setPersona(req: any, res: Response) {
 
 export async function uploadAvatar(req: any, res: Response) {
     const avatar: IfileUpload = req.files.avatar;
-    const Usuario = {
-        id: req.body.id
-    }
 
     if (!req.files) {
         return res.status(400).json({
@@ -222,10 +219,23 @@ export async function uploadAvatar(req: any, res: Response) {
             token: ""
         })
     }
+    const archivoAvatar = await fileSystem.saveAvatarFS(String(req.usuario.id), avatar)
+    const update: any = await queryGenerica("UPDATE usuario SET avatar = ? WHERE id = ?", [archivoAvatar, req.usuario.id]);
+        
+    if (update.affectedRows > 0) {
+        res.json({ estado: "success", data: avatar.name, token: "" })
+    } else {
+        res.json({
+            estado: "error",
+            message: `Error al actualizar el avatar`,
+            token: ""
+        })
+    }
+}
 
-    await fileSystem.saveImageTemp(Usuario.id, avatar)
-
-    res.json({ estado: "success", data: avatar.name, token: "" })
+export async function getAvatar(req: any, res: Response) {
+    const avatarName: any = await queryGenerica("SELECT avatar FROM usuario WHERE id = ?", [req.usuario.id]);
+    res.sendFile(fileSystem.getAvatar(String(req.usuario.id), avatarName[0].avatar));
 }
 
 export async function generarClave(req: any, res: Response) {
@@ -265,9 +275,4 @@ export async function generarClave(req: any, res: Response) {
             token: ""
         })
     }
-}
-
-export async function getAvatar(req: any, res: Response) {
-    const avatarName: any = await queryGenerica("SELECT avatar FROM usuario WHERE id = ?", [req.usuario._id]);
-    res.sendFile(fileSystem.getAvatar(String(req.usuario._id), avatarName[0].avatar));
 }

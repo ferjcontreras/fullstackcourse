@@ -18,7 +18,7 @@ UsuarioRoutes.put("/setRol", usuarioController.setRol)
 
 UsuarioRoutes.put("/setPersona", usuarioController.setPersona)
 
-UsuarioRoutes.post("/uploadAvatar", usuarioController.uploadAvatar)
+UsuarioRoutes.put("/uploadAvatar", verificarToken, usuarioController.uploadAvatar)
 
 UsuarioRoutes.post("/generarClave", usuarioController.generarClave)
 

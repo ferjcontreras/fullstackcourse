@@ -6,15 +6,11 @@ import unidid from 'uniqid';
 export default class FileSystem {
     constructor() { }
 
-    private createFolderUser(userID: string): string {
+    private createFolderUser(userID: string) {
         const pathUser = path.resolve(__dirname, "../uploads", userID);
-        const pathUserTemp = pathUser + "/temp";
-
         if (!fs.existsSync(pathUser)) {
             fs.mkdirSync(pathUser);
-            fs.mkdirSync(pathUserTemp);
         }
-        return pathUserTemp;
     }
 
     private generateUniqueName(originalFile: string): string {
@@ -24,32 +20,26 @@ export default class FileSystem {
         return `${idUnique}.${extension}`
     }
 
-    saveImageTemp(userID: string, file: IfileUpload): Promise<any> {
+    saveAvatarFS(userID: string, file: IfileUpload): Promise<any> {
         return new Promise((resolve, reject) => {
-            const pathUserTemp = this.createFolderUser(userID);
+           // const pathUserTemp = this.createFolderUser(userID);
+            const pathUserAvatar = path.resolve(__dirname, "../uploads", userID, "avatar");
             const fileName = this.generateUniqueName(file.name);
 
-            file.mv(`${pathUserTemp}/${fileName}`, (error: any) => {
+            this.createFolderUser(userID);
+            fs.rmdirSync(pathUserAvatar,{
+                recursive: true
+            });
+            fs.mkdirSync(pathUserAvatar)            
+
+            file.mv(`${pathUserAvatar}/${fileName}`, (error: any) => {
                 if (error) {
                     return reject();
-                } else {
-                    return resolve(true);
+                } else {                    
+                    return resolve(fileName);
                 }
             })
         })
-    }
-
-    imageFromTempToAvatar(userID: string) {
-        const pathUserTemp = path.resolve(__dirname, "../uploads", userID, "temp");
-        const pathUserAvatar = path.resolve(__dirname, "../uploads", userID, "avatar");
-
-        if (!fs.existsSync(pathUserTemp)) {
-            return [];
-        }
-
-        if (!fs.existsSync(pathUserAvatar)) {
-            fs.mkdirSync(pathUserAvatar)
-        }
     }
 
     fileFromTempToRecibos(userID: string) {
@@ -131,7 +121,7 @@ export default class FileSystem {
 
     getAvatar(userId: string, avatarName: string): string {
 
-        const pathFoto: string = path.resolve(__dirname, '../uploads', userId, avatarName);
+        const pathFoto: string = path.resolve(__dirname, '../uploads', userId, "avatar", avatarName);
         if (fs.existsSync(pathFoto)) {
             return pathFoto
         } else {

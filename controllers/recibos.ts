@@ -8,7 +8,7 @@ const fileSystem = new fs();
 
 export async function create(req: any, res: Response) {
     const newRecibo = <IRecibo>{
-        idUsuarioContador: req.usuario._id,
+        idUsuarioContador: req.usuario.id,
         idUsuarioEmpleado: req.body.id_usuario_empleado,
         idTipoRecibo: req.body.id_tipo_recibo,
         fecha: req.body.fecha,
@@ -86,7 +86,7 @@ export async function uploadRecibo(req: any, res: Response) {
 }
 
 export async function readAll(req: any, res: Response) {
-    const userId = req.usuario._id;
+    const userId = req.usuario.id;
     try {
         const recibos: any = await queryGenerica("SELECT * FROM recibo WHERE idUsuarioEmpleado = ?", [ userId ]);
         res.json({ estado: "success", data: recibos })
